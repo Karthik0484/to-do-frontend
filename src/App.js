@@ -6,26 +6,30 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
 
+  // Fetch all todos
   useEffect(() => {
-    axios.get("https://to-do-backend-lorq.onrender.com")
+    axios.get("https://to-do-backend-lorq.onrender.com/api/todos")
       .then(res => setTodos(res.data))
       .catch(err => console.log(err));
   }, []);
 
+  // Add a new todo
   const addTodo = () => {
     if (!newTodo.trim()) return;
-    axios.post("https://to-do-backend-lorq.onrender.com", { text: newTodo })
+    axios.post("https://to-do-backend-lorq.onrender.com/api/todos", { text: newTodo })
       .then(res => setTodos([...todos, res.data]));
     setNewTodo("");
   };
 
+  // Toggle completion status
   const toggleComplete = (id, completed) => {
-    axios.put(`https://to-do-backend-lorq.onrender.com${id}`, { completed: !completed })
+    axios.put(`https://to-do-backend-lorq.onrender.com/api/todos/${id}`, { completed: !completed })
       .then(res => setTodos(todos.map(todo => (todo._id === id ? res.data : todo))));
   };
 
+  // Delete a todo
   const deleteTodo = (id) => {
-    axios.delete(`https://to-do-backend-lorq.onrender.com${id}`)
+    axios.delete(`https://to-do-backend-lorq.onrender.com/api/todos/${id}`)
       .then(() => setTodos(todos.filter(todo => todo._id !== id)));
   };
 
